@@ -3,18 +3,20 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
  */
 package proyecto1_so_azael_sebastian;
+import proyecto1_so_azael_sebastian.hilos.Reloj;
 
 /**
  *
  * @author COMPUGAMER
  */
 public class Proyecto1_SO_Azael_Sebastian {
-
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
-        // TODO code application logic here
+        // Crear el reloj con ciclos de 1 segundo (1000ms)
+        Reloj relojSistema = new Reloj(1000);
+        
+        // Iniciar el hilo
+        relojSistema.start();
+        
+        System.out.println("Sistema Operativo del Satélite Iniciado...");
     }
-    
 }
