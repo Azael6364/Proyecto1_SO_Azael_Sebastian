@@ -5,60 +5,85 @@
 package proyectol_so_azael_sebastian.estructuras;
 import proyectol_so_azael_sebastian.modelo.Proceso;
 
-/**
- *
- * @author COMPUGAMER
- */
-
 public class ColaProcesos {
     private Nodo inicio;
-    private Nodo fin;
     private int tamano;
 
     public ColaProcesos() {
         this.inicio = null;
-        this.fin = null;
         this.tamano = 0;
     }
 
-    // Método para ver si esta vacia
-    public boolean esVacia() {
-        return inicio == null;
-    }
+    public boolean esVacia() { return inicio == null; }
+    public int getTamano() { return tamano; }
 
-    // Insertar al final 
     public void encolar(Proceso p) {
         Nodo nuevo = new Nodo(p);
         if (esVacia()) {
             inicio = nuevo;
-            fin = nuevo;
         } else {
-            fin.setSiguiente(nuevo);
-            fin = nuevo;
+            Nodo temp = inicio;
+            while (temp.getSiguiente() != null) temp = temp.getSiguiente();
+            temp.setSiguiente(nuevo);
         }
         tamano++;
     }
 
-    // Extraer del inicio 
+    public void encolarPrioridad(Proceso p) {
+        Nodo nuevo = new Nodo(p);
+        if (esVacia() || p.getPrioridad() < inicio.getContenido().getPrioridad()) {
+            nuevo.setSiguiente(inicio);
+            inicio = nuevo;
+        } else {
+            Nodo actual = inicio;
+            while (actual.getSiguiente() != null && actual.getSiguiente().getContenido().getPrioridad() <= p.getPrioridad()) {
+                actual = actual.getSiguiente();
+            }
+            nuevo.setSiguiente(actual.getSiguiente());
+            actual.setSiguiente(nuevo);
+        }
+        tamano++;
+    }
+
+    public void encolarEDF(Proceso p) {
+        Nodo nuevo = new Nodo(p);
+        if (esVacia() || p.getDeadlineRestante() < inicio.getContenido().getDeadlineRestante()) {
+            nuevo.setSiguiente(inicio);
+            inicio = nuevo;
+        } else {
+            Nodo actual = inicio;
+            while (actual.getSiguiente() != null && actual.getSiguiente().getContenido().getDeadlineRestante() <= p.getDeadlineRestante()) {
+                actual = actual.getSiguiente();
+            }
+            nuevo.setSiguiente(actual.getSiguiente());
+            actual.setSiguiente(nuevo);
+        }
+        tamano++;
+    }
+
+    public void encolarSRT(Proceso p) {
+        Nodo nuevo = new Nodo(p);
+        if (esVacia() || p.getInstruccionesRestantes() < inicio.getContenido().getInstruccionesRestantes()) {
+            nuevo.setSiguiente(inicio);
+            inicio = nuevo;
+        } else {
+            Nodo actual = inicio;
+            while (actual.getSiguiente() != null && actual.getSiguiente().getContenido().getInstruccionesRestantes() <= p.getInstruccionesRestantes()) {
+                actual = actual.getSiguiente();
+            }
+            nuevo.setSiguiente(actual.getSiguiente());
+            actual.setSiguiente(nuevo);
+        }
+        tamano++;
+    }
+
     public Proceso desencolar() {
         if (esVacia()) return null;
-        
         Proceso p = inicio.getContenido();
         inicio = inicio.getSiguiente();
-        if (inicio == null) {
-            fin = null;
-        }
         tamano--;
         return p;
     }
-    
-    // Metodo para obtener el tamaño 
-    public int getTamano() {
-        return tamano;
-    }
 
-    // Método auxiliar para ver el primero sin sacarlo
-    public Proceso verPrimero() {
-        return (inicio != null) ? inicio.getContenido() : null;
-    }
+    public Proceso verPrimero() { return (inicio != null) ? inicio.getContenido() : null; }
 }

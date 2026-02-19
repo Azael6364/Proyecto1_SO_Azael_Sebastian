@@ -5,11 +5,6 @@
 package proyectol_so_azael_sebastian.estructuras;
 import proyectol_so_azael_sebastian.modelo.Proceso;
 
-
-/**
- *
- * @author COMPUGAMER
- */
 public class Nodo {
     private Proceso contenido;
     private Nodo siguiente;
