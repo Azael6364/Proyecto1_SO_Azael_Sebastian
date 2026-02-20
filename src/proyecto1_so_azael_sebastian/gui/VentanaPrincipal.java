@@ -20,6 +20,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     
     private DefaultTableModel modeloListos;
     private DefaultTableModel modeloBloqueados;
+    private Planificador planificadorGlobal;
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaPrincipal.class.getName());
 
@@ -31,12 +32,12 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         configurarTablas();
         this.setLocationRelativeTo(null);
         
-        // Instanciamos el planificador (que lo necesita el reloj)
-    Planificador plani = new Planificador(); 
-    
-    // 4. Iniciamos el Reloj (1000ms = 1 segundo)
-    Reloj relojGlobal = new Reloj(1000, plani, this);
-    relojGlobal.start(); 
+    // Instanciamos el planificador GLOBAL
+     this.planificadorGlobal = new Planificador(); 
+
+     // Iniciamos el Reloj (1000ms = 1 segundo)
+     Reloj relojGlobal = new Reloj(1000, this.planificadorGlobal, this);
+     relojGlobal.start();
 
         
     }

@@ -170,4 +170,12 @@ public class Planificador {
             enEjecucion = null;
         }
     }
+    
+    public ColaProcesos getReadyQueue() {
+     return this.readyQueue;
+ }
+
+ public ColaProcesos getBlockedQueue() {
+     return this.blockedQueue;
+ }
 }
