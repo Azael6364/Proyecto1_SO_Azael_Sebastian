@@ -17,6 +17,7 @@ public class Planificador {
     private String politicaActual;
     private int quantum;
     private int contadorQuantum;
+    private String bitacoraEventos = "";
     
     public Planificador() {
         this.readyQueue = new ColaProcesos();
@@ -55,11 +56,13 @@ public class Planificador {
             
             if (enEjecucion.esTerminado()) {
                 enEjecucion.setEstado("Terminado");
+                registrarEvento("[EXITO] El " + enEjecucion.getNombre() + " finalizo sus instrucciones.");
                 finishedProcesses.encolar(enEjecucion);
                 enEjecucion = null;
                 contadorQuantum = 0;
             } else if (enEjecucion.debeBloquearse()) {
                 enEjecucion.iniciarBloqueo();
+                registrarEvento("[ALERTA] El " + enEjecucion.getNombre() + " solicito E/S (Va a Bloqueados).");
                 blockedQueue.encolar(enEjecucion);
                 enEjecucion = null;
                 contadorQuantum = 0;
@@ -181,6 +184,16 @@ public class Planificador {
  
  public Proceso getEnEjecucion() {
      return this.enEjecucion;
+ }
+ 
+ public void registrarEvento(String mensaje) {
+     this.bitacoraEventos += mensaje + "\n"; 
+ }
+
+ public String extraerEventos() {
+     String eventos = this.bitacoraEventos;
+     this.bitacoraEventos = ""; 
+     return eventos;
  }
  
 }
