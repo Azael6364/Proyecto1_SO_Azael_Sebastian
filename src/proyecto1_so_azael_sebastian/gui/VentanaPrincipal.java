@@ -1,3 +1,4 @@
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
@@ -10,6 +11,7 @@ import proyecto1_so_azael_sebastian.modelo.GeneradorProcesos;
 import proyecto1_so_azael_sebastian.estructuras.ColaProcesos;
 import proyecto1_so_azael_sebastian.estructuras.Nodo;
 import proyecto1_so_azael_sebastian.modelo.Proceso;
+import proyecto1_so_azael_sebastian.modelo.Planificador;
 /**
  *
  * @author COMPUGAMER
@@ -28,6 +30,15 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         initComponents();
         configurarTablas();
         this.setLocationRelativeTo(null);
+        
+        // Instanciamos el planificador (que lo necesita el reloj)
+    Planificador plani = new Planificador(); 
+    
+    // 4. Iniciamos el Reloj (1000ms = 1 segundo)
+    Reloj relojGlobal = new Reloj(1000, plani, this);
+    relojGlobal.start(); 
+
+        
     }
 
     private void configurarTablas() {
@@ -76,7 +87,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
+        lblReloj = new javax.swing.JLabel();
         btnGenerar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaBloqueados = new javax.swing.JTable();
@@ -85,7 +96,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setText("Ciclo Global: 0");
+        lblReloj.setText("Ciclo Global: 0");
 
         btnGenerar.setText("Generar 20 Procesos");
         btnGenerar.addActionListener(this::btnGenerarActionPerformed);
@@ -123,7 +134,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblReloj, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(49, 49, 49))
@@ -138,7 +149,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(18, 18, 18)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblReloj, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(0, 45, Short.MAX_VALUE)
@@ -211,13 +222,17 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> new VentanaPrincipal().setVisible(true));
     }
+    
+    public void actualizarReloj(int ciclo) {
+    this.lblReloj.setText("Ciclo Global: " + ciclo);
+}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnGenerar;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel lblReloj;
     private javax.swing.JTable tablaBloqueados;
     private javax.swing.JTable tablaListos;
     // End of variables declaration//GEN-END:variables

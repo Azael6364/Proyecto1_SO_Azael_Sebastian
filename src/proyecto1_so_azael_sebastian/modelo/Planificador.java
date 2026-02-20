@@ -17,6 +17,19 @@ public class Planificador {
     private String politicaActual;
     private int quantum;
     private int contadorQuantum;
+    
+    public Planificador() {
+        this.readyQueue = new ColaProcesos();
+        this.blockedQueue = new ColaProcesos();
+        this.readySuspended = new ColaProcesos();
+        this.blockedSuspended = new ColaProcesos();
+        this.finishedProcesses = new ColaProcesos();
+        this.maxRAM = 50; // 50 de RAM por defecto
+        this.politicaActual = "Round Robin"; // Politica por defecto
+        this.quantum = 3;
+        this.contadorQuantum = 0;
+        this.enEjecucion = null;
+    }
 
     public Planificador(int maxRAM, String politicaInicial) {
         this.readyQueue = new ColaProcesos();
