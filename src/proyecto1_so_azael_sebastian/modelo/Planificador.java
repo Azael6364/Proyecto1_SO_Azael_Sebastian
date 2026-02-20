@@ -178,4 +178,9 @@ public class Planificador {
  public ColaProcesos getBlockedQueue() {
      return this.blockedQueue;
  }
+ 
+ public Proceso getEnEjecucion() {
+     return this.enEjecucion;
+ }
+ 
 }
