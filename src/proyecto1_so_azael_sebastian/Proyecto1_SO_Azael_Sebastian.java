@@ -4,8 +4,9 @@
  */
 package proyecto1_so_azael_sebastian;
 
+import proyecto1_so_azael_sebastian.modelo.GeneradorProcesos;
+import proyecto1_so_azael_sebastian.modelo.Planificador;
 import proyecto1_so_azael_sebastian.hilos.*;
-import proyectol_so_azael_sebastian.modelo.*;
 
 public class Proyecto1_SO_Azael_Sebastian {
     public static void main(String[] args) {
