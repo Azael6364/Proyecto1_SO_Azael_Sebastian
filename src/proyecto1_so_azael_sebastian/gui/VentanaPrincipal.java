@@ -49,7 +49,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         modeloListos.addColumn("Nombre");
         modeloListos.addColumn("Prioridad");
         modeloListos.addColumn("Deadline");
-        tablaBloqueados.setModel(modeloListos); // Conecta el modelo con tu tabla visual
+        tablaListos.setModel(modeloListos); // Conecta el modelo con tu tabla visual
         
         // Configuramos las columnas para la Cola de Bloqueados
         modeloBloqueados = new DefaultTableModel();
@@ -57,7 +57,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         modeloBloqueados.addColumn("Nombre");
         modeloBloqueados.addColumn("Prioridad");
         modeloBloqueados.addColumn("Deadline");
-        tablaListos.setModel(modeloBloqueados);
+        tablaBloqueados.setModel(modeloBloqueados);
     }
 
     // Método que lee tu lista enlazada y pinta las filas en la tabla
@@ -78,23 +78,45 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         }
     }
     
+    public void actualizarTablaBloqueados(ColaProcesos cola) {
+        modeloBloqueados.setRowCount(0); // Limpia la tabla
+        
+        Nodo actual = cola.getInicio(); 
+        while (actual != null) {
+            Proceso p = actual.getContenido();
+            Object[] fila = {
+                p.getId(),
+                p.getNombre(),
+                p.getPrioridad(),
+                p.getDeadline() // 
+            };
+            modeloBloqueados.addRow(fila); 
+            actual = actual.getSiguiente();
+        }
+    }
+    
     public void refrescarTablas() {
-        // 1. Actualizamos la tabla de listos 
+        // 1. Actualizamos la tabla de Listos 
         ColaProcesos colaListosReal = this.planificadorGlobal.getReadyQueue();
         actualizarTablaListos(colaListosReal);
         
-        // 2. Leemos qué proceso está en la CPU
+        // 2. Actualiza la tabla de Bloqueados 
+        ColaProcesos colaBloqueadosReal = this.planificadorGlobal.getBlockedQueue();
+        actualizarTablaBloqueados(colaBloqueadosReal);
+        
+        // 3. Lee que proceso está en la CPU
         Proceso cpu = this.planificadorGlobal.getEnEjecucion();
         
-        // 3. Mostramos la info en pantalla
+        // 4. Muestra la info en pantalla
         if (cpu != null) {
             this.lblCpuProceso.setText("Ejecutando: " + cpu.getNombre() + " (ID: " + cpu.getId() + ")");
-            this.lblCpuDeadline.setText("Deadline Restante: " + cpu.getDeadlineRestante());
+            this.lblCpuDeadline.setText("Deadline Restante: " + cpu.getDeadline());
         } else {
             this.lblCpuProceso.setText("CPU: Inactiva");
             this.lblCpuDeadline.setText("Deadline: --");
         }
     }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -162,48 +184,45 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(71, 71, 71)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 136, Short.MAX_VALUE)
+                .addGap(98, 98, 98)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(78, 78, 78)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblReloj, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblCpuProceso, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblCpuDeadline, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(66, 66, 66)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(86, 86, 86))
+                    .addComponent(lblCpuDeadline, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblCpuProceso, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(159, 159, 159))
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(611, 611, 611)
+                .addGap(628, 628, 628)
                 .addComponent(btnGenerar, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(137, 137, 137)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(39, 39, 39)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(137, 137, 137)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(lblReloj, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(53, 53, 53)
-                                .addComponent(lblCpuProceso, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(40, 40, 40)
-                                .addComponent(lblCpuDeadline, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                        .addGap(15, 15, 15)
+                        .addComponent(lblReloj, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(60, 60, 60)
+                        .addComponent(lblCpuProceso, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(lblCpuDeadline, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
                 .addComponent(btnGenerar, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(57, 57, 57))
+                .addGap(67, 67, 67))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1477, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
