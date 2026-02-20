@@ -115,6 +115,13 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             this.lblCpuProceso.setText("CPU: Inactiva");
             this.lblCpuDeadline.setText("Deadline: --");
         }
+        // Lee el log de la CPU y lo pasa a la consola
+        String nuevosEventos = this.planificadorGlobal.extraerEventos();
+        
+        if (!nuevosEventos.isEmpty()) {
+            this.txtLog.append(nuevosEventos);
+            this.txtLog.setCaretPosition(this.txtLog.getDocument().getLength()); 
+        }
     }
     
     /**
@@ -135,11 +142,12 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         tablaListos = new javax.swing.JTable();
         lblCpuDeadline = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        txtLog = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMaximumSize(null);
         setMinimumSize(new java.awt.Dimension(1024, 600));
-        setPreferredSize(new java.awt.Dimension(1480, 720));
 
         jPanel1.setMinimumSize(new java.awt.Dimension(1024, 600));
         jPanel1.setPreferredSize(new java.awt.Dimension(1480, 720));
@@ -179,6 +187,11 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         lblCpuDeadline.setText("Deadline: --");
 
+        txtLog.setEditable(false);
+        txtLog.setColumns(20);
+        txtLog.setRows(5);
+        jScrollPane3.setViewportView(txtLog);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -195,14 +208,16 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(159, 159, 159))
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(628, 628, 628)
+                .addGap(154, 154, 154)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 379, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(93, 93, 93)
                 .addComponent(btnGenerar, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(137, 137, 137)
+                .addGap(152, 152, 152)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -213,9 +228,11 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(lblCpuDeadline, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
-                .addComponent(btnGenerar, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(67, 67, 67))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnGenerar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(24, 24, 24))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -283,10 +300,12 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JLabel lblCpuDeadline;
     private javax.swing.JLabel lblCpuProceso;
     private javax.swing.JLabel lblReloj;
     private javax.swing.JTable tablaBloqueados;
     private javax.swing.JTable tablaListos;
+    private javax.swing.JTextArea txtLog;
     // End of variables declaration//GEN-END:variables
 }
