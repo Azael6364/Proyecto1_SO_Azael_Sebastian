@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package proyectol_so_azael_sebastian.modelo;
+package proyecto1_so_azael_sebastian.modelo;
 
 public class Proceso {
     private int id;
@@ -13,6 +13,7 @@ public class Proceso {
     private int prioridad;
     private int instruccionesTotales;
     private int instruccionesEjecutadas;
+    private int deadline;
     private int deadlineRestante; 
     private int ciclosParaBloqueo; 
     private int ciclosEnBloqueoRestantes; 
@@ -22,6 +23,7 @@ public class Proceso {
         this.nombre = nombre;
         this.instruccionesTotales = instruccionesTotales;
         this.prioridad = prioridad;
+        this.deadline = deadline;
         this.deadlineRestante = deadline;
         this.estado = "Nuevo";
         this.pc = 0;
@@ -70,4 +72,5 @@ public class Proceso {
     public int getPC() { return pc; }
     public int getMAR() { return mar; }
     public boolean esTerminado() { return instruccionesEjecutadas >= instruccionesTotales; }
+   public int getDeadline() { return deadline; }
 }

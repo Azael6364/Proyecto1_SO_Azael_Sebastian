@@ -2,9 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package proyectol_so_azael_sebastian.modelo;
+package proyecto1_so_azael_sebastian.modelo;
 
-import proyectol_so_azael_sebastian.estructuras.ColaProcesos;
+import proyecto1_so_azael_sebastian.estructuras.ColaProcesos;
 
 public class Planificador {
     private ColaProcesos readyQueue;

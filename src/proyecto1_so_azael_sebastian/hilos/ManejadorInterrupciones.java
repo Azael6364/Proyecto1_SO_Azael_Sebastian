@@ -4,7 +4,7 @@
  */
 package proyecto1_so_azael_sebastian.hilos;
 
-import proyectol_so_azael_sebastian.modelo.Planificador;
+import proyecto1_so_azael_sebastian.modelo.Planificador;
 
 public class ManejadorInterrupciones extends Thread {
     private Planificador planificador;
