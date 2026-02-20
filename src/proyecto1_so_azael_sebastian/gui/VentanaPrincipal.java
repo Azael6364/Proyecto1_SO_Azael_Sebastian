@@ -176,12 +176,14 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         tablaTerminados = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMaximumSize(null);
         setMinimumSize(new java.awt.Dimension(1024, 600));
 
+        jPanel1.setBackground(new java.awt.Color(15, 20, 35));
         jPanel1.setMinimumSize(new java.awt.Dimension(1024, 600));
         jPanel1.setPreferredSize(new java.awt.Dimension(1480, 720));
 
+        lblReloj.setFont(new java.awt.Font("Consolas", 0, 18)); // NOI18N
+        lblReloj.setForeground(new java.awt.Color(0, 255, 0));
         lblReloj.setText("Ciclo Global: 0");
 
         btnGenerar.setText("Generar 20 Procesos");
@@ -200,6 +202,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(tablaBloqueados);
 
+        lblCpuProceso.setFont(new java.awt.Font("Consolas", 0, 18)); // NOI18N
+        lblCpuProceso.setForeground(new java.awt.Color(0, 255, 0));
         lblCpuProceso.setText("CPU: Inactiva");
 
         tablaListos.setModel(new javax.swing.table.DefaultTableModel(
@@ -215,6 +219,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         ));
         jScrollPane2.setViewportView(tablaListos);
 
+        lblCpuDeadline.setFont(new java.awt.Font("Consolas", 0, 18)); // NOI18N
+        lblCpuDeadline.setForeground(new java.awt.Color(0, 255, 0));
         lblCpuDeadline.setText("Deadline: --");
 
         txtLog.setEditable(false);
@@ -286,7 +292,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                         .addComponent(btnGenerar, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 83, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 80, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
