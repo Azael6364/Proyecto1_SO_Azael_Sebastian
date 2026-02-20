@@ -54,7 +54,14 @@ public class Planificador {
             enEjecucion.reducirDeadline();
             contadorQuantum++;
             
-            if (enEjecucion.esTerminado()) {
+            if (enEjecucion.getDeadline() <= 0 && !enEjecucion.esTerminado()) {
+                enEjecucion.setEstado("Fallido");
+                registrarEvento("[FALLO DE MISIÓN] " + enEjecucion.getNombre() + " no cumplió su Deadline.");
+                finishedProcesses.encolar(enEjecucion);
+                enEjecucion = null;
+                contadorQuantum = 0;
+            
+            } else if (enEjecucion.esTerminado()) {
                 enEjecucion.setEstado("Terminado");
                 registrarEvento("[EXITO] El " + enEjecucion.getNombre() + " finalizo sus instrucciones.");
                 finishedProcesses.encolar(enEjecucion);
@@ -194,6 +201,10 @@ public class Planificador {
      String eventos = this.bitacoraEventos;
      this.bitacoraEventos = ""; 
      return eventos;
+ }
+ 
+ public ColaProcesos getFinishedProcesses() {
+     return this.finishedProcesses;
  }
  
 }
