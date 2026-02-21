@@ -78,34 +78,47 @@
                           <Component id="jScrollPane5" min="-2" pref="600" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="btnGenerar" alignment="2" min="-2" pref="204" max="-2" attributes="0"/>
-                      <Component id="btnEmergencia" alignment="2" min="-2" pref="240" max="-2" attributes="0"/>
-                      <Component id="cbxPoliticas" alignment="2" min="-2" pref="248" max="-2" attributes="0"/>
-                      <Component id="lblCpuProceso" alignment="2" min="-2" pref="300" max="-2" attributes="0"/>
-                      <Component id="panelGrafico" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="lblCpuDeadline" alignment="2" min="-2" pref="300" max="-2" attributes="0"/>
-                      <Component id="jScrollPane3" alignment="2" min="-2" pref="379" max="-2" attributes="0"/>
-                      <Component id="lblReloj" alignment="2" min="-2" pref="300" max="-2" attributes="0"/>
-                      <Component id="jSlider1" alignment="2" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace pref="20" max="32767" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="103" groupAlignment="1" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
+                          <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Group type="103" groupAlignment="2" attributes="0">
+                                      <Component id="btnGenerar" alignment="2" min="-2" pref="204" max="-2" attributes="0"/>
+                                      <Component id="btnEmergencia" alignment="2" min="-2" pref="240" max="-2" attributes="0"/>
+                                      <Component id="cbxPoliticas" alignment="2" min="-2" pref="248" max="-2" attributes="0"/>
+                                      <Component id="panelGrafico" alignment="2" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lblCpuDeadline" alignment="2" min="-2" pref="300" max="-2" attributes="0"/>
+                                      <Component id="jScrollPane3" alignment="2" min="-2" pref="379" max="-2" attributes="0"/>
+                                      <Component id="lblReloj" alignment="2" min="-2" pref="300" max="-2" attributes="0"/>
+                                      <Component id="jSlider1" alignment="2" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace pref="20" max="32767" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Group type="102" alignment="1" attributes="0">
+                                          <Component id="lblThroughput" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace min="-2" pref="158" max="-2" attributes="0"/>
+                                      </Group>
+                                      <Group type="102" alignment="1" attributes="0">
+                                          <Component id="jScrollPane4" min="-2" pref="600" max="-2" attributes="0"/>
+                                          <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
+                                      </Group>
+                                      <Group type="102" alignment="1" attributes="0">
+                                          <Component id="btnCargarArchivo" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                      </Group>
+                                  </Group>
+                              </Group>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <EmptySpace min="-2" pref="50" max="-2" attributes="0"/>
+                                  <Component id="lblCpuProceso" min="-2" pref="400" max="-2" attributes="0"/>
+                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              </Group>
+                          </Group>
+                      </Group>
+                      <Group type="102" alignment="1" attributes="0">
+                          <EmptySpace max="32767" attributes="0"/>
                           <Component id="jScrollPane1" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="1" attributes="0">
-                          <Component id="lblThroughput" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="158" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="1" attributes="0">
-                          <Component id="jScrollPane4" min="-2" pref="600" max="-2" attributes="0"/>
-                          <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="1" attributes="0">
-                          <Component id="btnCargarArchivo" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -121,9 +134,9 @@
                           <Component id="cbxPoliticas" min="-2" pref="43" max="-2" attributes="0"/>
                           <EmptySpace pref="78" max="32767" attributes="0"/>
                           <Component id="lblReloj" min="-2" pref="58" max="-2" attributes="0"/>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                           <Component id="lblCpuProceso" min="-2" pref="75" max="-2" attributes="0"/>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Component id="lblCpuDeadline" min="-2" pref="65" max="-2" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="panelGrafico" min="-2" max="-2" attributes="0"/>
