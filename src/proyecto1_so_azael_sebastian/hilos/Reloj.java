@@ -3,69 +3,60 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package proyecto1_so_azael_sebastian.hilos;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import java.util.concurrent.Semaphore;
+import proyecto1_so_azael_sebastian.modelo.Planificador;
+import proyecto1_so_azael_sebastian.gui.VentanaPrincipal;
 
 /**
- * Hilo que simula el reloj del sistema.
- * Mantiene el conteo de ciclos globales.
- * @author COMPUGAMER
+ * Hilo concurrente que simula los pulsos de reloj del procesador.
+ * Utiliza un objeto Semaphore para garantizar la exclusion mutua y 
+ * asegurar que las transiciones de estado ocurran sin corrupcion de datos.
  */
-
 public class Reloj extends Thread {
-    
     private int contadorCiclos;
     private boolean pausado;
-    private int tiempoCiclo; // En milisegundos 
-    
-    // Referencia a la interfaz o controlador para notificar el cambio
-    // private InterfazGrafica gui
+    private int tiempoCiclo;
+    private Semaphore mutex;
+    private Planificador planificador;
+    private VentanaPrincipal ventana;
 
-    public Reloj(int tiempoCiclo) {
+    public Reloj(int tiempoCiclo, Planificador planificador, VentanaPrincipal ventana) {
         this.contadorCiclos = 0;
         this.tiempoCiclo = tiempoCiclo;
         this.pausado = false;
+        this.mutex = new Semaphore(1);
+        this.planificador = planificador; 
+        this.ventana = ventana;
     }
 
-    @Override
+   @Override
     public void run() {
         while (true) {
             try {
                 if (!pausado) {
-                    // 1. Incrementar el reloj global
+                    // Adquiere el semaforo para asegurar que el planificador opere en una seccion critica
+                    mutex.acquire();
                     contadorCiclos++;
+                    
+                    if (planificador != null) {
+                        planificador.ejecutarPaso();
+                    }
+                    
+                    if (ventana != null) {
+                        ventana.actualizarReloj(contadorCiclos);
+                    }
+                    
                     System.out.println("[RELOJ] Ciclo Global: " + contadorCiclos);
-                    
-                    // 2. AQUÍ CONECTAREMOS EL PLANIFICADOR (TODO)
-                    // Planificador.ejecutarCiclo();
-                    
-                    // 3. AQUÍ ACTUALIZAREMOS LA GUI (TODO)
-                    // gui.actualizarReloj(contadorCiclos);
+                    mutex.release(); // Libera el recurso tras actualizar el sistema
                 }
-                
-                // Simular la duración del ciclo
                 Thread.sleep(tiempoCiclo);
-                
             } catch (InterruptedException ex) {
-                Logger.getLogger(Reloj.class.getName()).log(Level.SEVERE, null, ex);
+                break;
             }
         }
     }
-
-    // Metodos para controlar el tiempo desde la GUI
-    public void pausar() {
-        this.pausado = true;
-    }
-
-    public void reanudar() {
-        this.pausado = false;
-    }
-    
-    public int getCiclos() {
-        return contadorCiclos;
-    }
-    
     public void setTiempoCiclo(int nuevoTiempo) {
-        this.tiempoCiclo = nuevoTiempo;
+        this.tiempoCiclo = nuevoTiempo; 
     }
 }
