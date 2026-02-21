@@ -19,7 +19,9 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import java.awt.BorderLayout;
 /**
- *
+ * Clase principal de la Interfaz Grafica de Usuario (GUI).
+ * actua como la vista del sistema, reflejando las transiciones de estados
+ * del planificador en tiempo real y gestionando las interacciones del usuario.
  * @author COMPUGAMER
  */
 public class VentanaPrincipal extends javax.swing.JFrame {
@@ -35,8 +37,11 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaPrincipal.class.getName());
 
     /**
-     * Creates new form VentanaPrincipal
+     * Constructor del centro de mando.
+     * inicializa los componentes visuales, prepara las estructuras de datos
+     * y arranca el hilo concurrente del reloj global.
      */
+    
     public VentanaPrincipal() {
         initComponents();
         configurarTablas();
@@ -47,9 +52,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         this.relojGlobal = new Reloj(1000, this.planificadorGlobal, this);
         this.relojGlobal.start();
-        btnGenerarActionPerformed(null);
         
-        // (Asegúrate de que NO esté el ManejadorInterrupciones aquí)
+        // Genera la carga inicial de procesos automaticamente al arrancar
+        btnGenerarActionPerformed(null);
     }
 
 private void configurarTablas() {
@@ -215,7 +220,7 @@ private void configurarTablas() {
                 p.getPC(),
                 p.getMAR(),
                 p.getPrioridad(),
-                p.getDeadlineRestante() // Usamos el Restante para ver cómo baja el reloj
+                p.getDeadlineRestante() // Usa el Restante para ver cómo baja el reloj
             };
             modeloListos.addRow(fila); // Agrega la fila visualmente
             actual = actual.getSiguiente();
@@ -261,6 +266,13 @@ private void configurarTablas() {
             actual = actual.getSiguiente();
         }
     }
+    
+   /**
+     * Sincroniza las colas de memoria del backend con las tablas visuales.
+     * evalua el Bloque de Control de Proceso (PCB) activo en la CPU para determinar 
+     * e indicar visualmente si el control lo tiene un programa de usuario 
+     * o el Sistema Operativo (Rutina de Interrupcion o Inactividad).
+     */
     public void refrescarTablas() {
         // 1. Actualizamos la tabla de Listos 
         ColaProcesos colaListosReal = this.planificadorGlobal.getReadyQueue();
@@ -270,15 +282,15 @@ private void configurarTablas() {
         ColaProcesos colaBloqueadosReal = this.planificadorGlobal.getBlockedQueue();
         actualizarTablaBloqueados(colaBloqueadosReal);
         
-        // 3. Actualizamos la tabla de Terminados 
+        // 3. Actualiza la tabla de Terminados 
         ColaProcesos colaTerminadosReal = this.planificadorGlobal.getFinishedProcesses();
         actualizarTablaTerminados(colaTerminadosReal);
         
-        // 4. Actualizamos la tabla de SWAP
+        // 4. Actualiza la tabla de SWAP
         ColaProcesos colaSuspendidosReal = this.planificadorGlobal.getReadySuspended();
         actualizarTablaSuspendidos(colaSuspendidosReal);
         
-        // 5. Lee que proceso está en la CPU
+        // 5. Lee que proceso esta en la CPU
         Proceso cpu = this.planificadorGlobal.getEnEjecucion();
         
         // 6. Muestra la info en pantalla
@@ -579,13 +591,20 @@ private void configurarTablas() {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnGenerarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarActionPerformed
+     
+     /**
+     * Evento de generacion de carga de trabajo.
+     * Instancia el generador y empuja 20 procesos a la cola de listos 
+     * para estresar el planificador y evaluar su capacidad de respuesta.
+     */
+        
         // 1. Instanciamos el generador
         GeneradorProcesos generador = new GeneradorProcesos();
         
         // 2. Creamos 20 procesos y los enviamos al Planificador Global
         for (int i = 0; i < 20; i++) {
             Proceso p = generador.crearProcesoAleatorio();
-            this.planificadorGlobal.añadirProceso(p); // <-- Ahora entran a la CPU
+            this.planificadorGlobal.añadirProceso(p); //Ahora entra a la CPU
         }
         
         // 3. Actualizamos la vista
@@ -595,42 +614,59 @@ private void configurarTablas() {
     }//GEN-LAST:event_btnGenerarActionPerformed
 
     private void btnEmergenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEmergenciaActionPerformed
-    // Cumplimos la rúbrica: La interrupción usa un Hilo (Thread) independiente
+    
+     /**
+     * Evento del boton de emergencia (Meteorito).
+     * Crea y ejecuta un hilo independiente para cumplir con el requerimiento de concurrencia,
+     * simulando una interrupcion de hardware asincrona que suspende la ejecucion normal.
+     */
+
         Thread hiloInterrupcion = new Thread(new Runnable() {
             @Override
             public void run() {
-                // 1. Creamos la Rutina de Servicio de Interrupción (ISR)
+                // 1. Creamos la Rutina de Servicio de Interrupcion (ISR)
                 GeneradorProcesos generador = new GeneradorProcesos();
                 Proceso emergencia = generador.crearProcesoAleatorio();
                 emergencia.setNombre("ISR_METEORITO");
-                emergencia.setPrioridad(1); // Prioridad máxima para que la CPU lo atienda YA
+                emergencia.setPrioridad(1); // Prioridad maxima para que la CPU lo atienda YA
                 emergencia.setDeadline(15);
                 
                 // 2. Disparamos la interrupción en el Planificador
                 planificadorGlobal.interrupcionEmergencia(emergencia);
                 
-                // 3. Forzamos la actualización visual
+                // 3. Forzamos la actualizacion visual
                 refrescarTablas();
             }
         });
         
-        hiloInterrupcion.start();    // TODO add your handling code here:
+        hiloInterrupcion.start();    
     }//GEN-LAST:event_btnEmergenciaActionPerformed
 
     private void cbxPoliticasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxPoliticasActionPerformed
-    // Le avisamos al planificador que cambie el algoritmo
+    /**
+     * Evento de seleccion de algoritmo.
+     * notifica al planificador para que actualice dinamicamente su politica de 
+     * ordenamiento (Round Robin, SRT, EDF, etc.) y reestructure la cola de listos.
+     */
+
+        // Le avisa al planificador que cambie el algoritmo
         String politicaSeleccionada = cbxPoliticas.getSelectedItem().toString();
         planificadorGlobal.cambiarPolitica(politicaSeleccionada);
-        planificadorGlobal.registrarEvento("⚙️ [SISTEMA] Política cambiada a: " + politicaSeleccionada);    // TODO add your handling code here:
+        planificadorGlobal.registrarEvento("⚙️ [SISTEMA] Política cambiada a: " + politicaSeleccionada);    
     }//GEN-LAST:event_cbxPoliticasActionPerformed
 
     private void jSlider1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSlider1StateChanged
         if (this.relojGlobal != null) {
-            this.relojGlobal.setTiempoCiclo(jSlider1.getValue()); // Ojo: asegúrate de que se llame jSlider1
+            this.relojGlobal.setTiempoCiclo(jSlider1.getValue()); 
         }
     }//GEN-LAST:event_jSlider1StateChanged
 
     private void btnCargarArchivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargarArchivoActionPerformed
+     /**
+     * Evento de lectura de archivos.
+     * abre un flujo de entrada para leer un archivo CSV linea por linea, 
+     * mapeando los datos de texto a nuevos objetos proceso que son inyectados al sistema.
+     */
         this.txtLog.setText("");
         javax.swing.JFileChooser explorador = new javax.swing.JFileChooser();
     if (explorador.showOpenDialog(this) == javax.swing.JFileChooser.APPROVE_OPTION) {
@@ -680,7 +716,12 @@ private void configurarTablas() {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> new VentanaPrincipal().setVisible(true));
     }
-    
+    /**
+     * Metodo invocado en cada pulso por el hilo del Reloj.
+     * alimenta la serie de datos de la grafica JFreeChart basandose en la ocupacion
+     * del procesador y calcula las metricas de rendimiento matematico general 
+     * (tasa de exito y throughput).
+     */
     public void actualizarReloj(int ciclo) {
         this.lblReloj.setText("Ciclo Global: " + ciclo);
         this.refrescarTablas();

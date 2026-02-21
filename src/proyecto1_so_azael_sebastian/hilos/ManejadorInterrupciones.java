@@ -8,6 +8,10 @@ import proyecto1_so_azael_sebastian.modelo.Planificador;
 import proyecto1_so_azael_sebastian.modelo.Proceso; 
 import proyecto1_so_azael_sebastian.modelo.GeneradorProcesos; 
 
+/**
+ * Hilo concurrente e independiente que simula la llegada asincrona 
+ * de eventos externos para evaluar el planificador.
+ */
 public class ManejadorInterrupciones extends Thread {
     private Planificador planificador;
 
@@ -21,16 +25,14 @@ public class ManejadorInterrupciones extends Thread {
         
         while (true) {
             try {
-                // Espera 12 segundos (12000 milisegundos)
                 Thread.sleep(12000);
                 
-                // 1. Creamos el proceso de emergencia (ISR)
+                // Genera el proceso correspondiente a la Rutina de Servicio de Interrupcion (ISR)
                 Proceso emergencia = generador.crearProcesoAleatorio();
                 emergencia.setNombre("ISR_AUTOMATICO");
-                emergencia.setPrioridad(1); // Prioridad máxima
+                emergencia.setPrioridad(1); 
                 emergencia.setDeadline(15);
                 
-                // 2. Disparamos tu método nuevo (el que sí recibe un proceso)
                 planificador.interrupcionEmergencia(emergencia);
                 
             } catch (InterruptedException e) {

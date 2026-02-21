@@ -4,6 +4,10 @@
  */
 package proyecto1_so_azael_sebastian.modelo;
 
+/**
+ * Clase encargada de generar procesos de manera automatica 
+ * asignando valores aleatorios para evaluar la tolerancia y el estres del simulador.
+ */
 public class GeneradorProcesos {
     private int contadorId;
 
@@ -20,8 +24,8 @@ public class GeneradorProcesos {
     public Proceso crearProcesoAleatorio() {
         int id = contadorId++;
         String nombre = "Proc_" + id;
-        int instrucciones = (int) (Math.random() * 20) + 5; // Entre 5 y 25 instrucciones [cite: 42]
-        int prioridad = (int) (Math.random() * 5) + 1;      // Prioridad 1-5 [cite: 42]
+        int instrucciones = (int) (Math.random() * 20) + 5; 
+        int prioridad = (int) (Math.random() * 5) + 1;      
         int deadline = (int) (Math.random() * 300) + 100;   
 
         return new Proceso(id, nombre, instrucciones, prioridad, deadline);

@@ -4,6 +4,10 @@
  */
 package proyecto1_so_azael_sebastian.modelo;
 
+/**
+ * Clase que representa el Bloque de Control de Proceso (PCB).
+ * almacena la informacion de estado, contadores de programa y parametros de planificacion.
+ */
 public class Proceso {
     private int id;
     private String nombre;
@@ -33,6 +37,10 @@ public class Proceso {
         this.ciclosEnBloqueoRestantes = 0;
     }
 
+    /*
+     * Simula la ejecucion lineal del proceso en el procesador.
+     * se incrementan el PC y el MAR en una unidad por cada ciclo de instruccion.
+     */
     public void ejecutarCiclo() {
         this.pc++;
         this.mar++;
@@ -44,6 +52,10 @@ public class Proceso {
         return ciclosParaBloqueo <= 0 && !esTerminado();
     }
 
+    /*
+     * Gestiona la transicion de estado hacia la cola de Bloqueados.
+     * genera un tiempo de espera aleatorio simulando una operacion de Entrada/Salida.
+     */
     public void iniciarBloqueo() {
         this.estado = "Bloqueado";
         this.ciclosEnBloqueoRestantes = (int) (Math.random() * 3) + 2; 
@@ -62,7 +74,7 @@ public class Proceso {
         if (this.deadlineRestante > 0) this.deadlineRestante--;
     }
 
-    // --- GETTERS ---
+    // GETTERS
     public int getId() { return id; }
     public String getNombre() { return nombre; }
     public String getEstado() { return estado; }
@@ -74,7 +86,7 @@ public class Proceso {
     public boolean esTerminado() { return instruccionesEjecutadas >= instruccionesTotales; }
     public int getDeadline() { return deadline; }
 
-    // --- SETTERS (Necesarios para la interrupción de emergencia) ---
+    // SETTERS 
     public void setEstado(String estado) { this.estado = estado; }
     
     public void setNombre(String nombre) { 
@@ -87,14 +99,9 @@ public class Proceso {
     
     public void setDeadline(int deadline) { 
         this.deadline = deadline; 
-        this.deadlineRestante = deadline; // Sincronizamos ambos tiempos
+        this.deadlineRestante = deadline; 
     }
 }
-
-
-
-
-
 
 
 

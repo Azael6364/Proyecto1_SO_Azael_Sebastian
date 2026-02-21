@@ -8,6 +8,11 @@ import java.util.concurrent.Semaphore;
 import proyecto1_so_azael_sebastian.modelo.Planificador;
 import proyecto1_so_azael_sebastian.gui.VentanaPrincipal;
 
+/**
+ * Hilo concurrente que simula los pulsos de reloj del procesador.
+ * Utiliza un objeto Semaphore para garantizar la exclusion mutua y 
+ * asegurar que las transiciones de estado ocurran sin corrupcion de datos.
+ */
 public class Reloj extends Thread {
     private int contadorCiclos;
     private boolean pausado;
@@ -30,6 +35,7 @@ public class Reloj extends Thread {
         while (true) {
             try {
                 if (!pausado) {
+                    // Adquiere el semaforo para asegurar que el planificador opere en una seccion critica
                     mutex.acquire();
                     contadorCiclos++;
                     
@@ -37,13 +43,12 @@ public class Reloj extends Thread {
                         planificador.ejecutarPaso();
                     }
                     
-                    // 3. ACTUALIZAR LA GUI
                     if (ventana != null) {
                         ventana.actualizarReloj(contadorCiclos);
                     }
                     
                     System.out.println("[RELOJ] Ciclo Global: " + contadorCiclos);
-                    mutex.release();
+                    mutex.release(); // Libera el recurso tras actualizar el sistema
                 }
                 Thread.sleep(tiempoCiclo);
             } catch (InterruptedException ex) {

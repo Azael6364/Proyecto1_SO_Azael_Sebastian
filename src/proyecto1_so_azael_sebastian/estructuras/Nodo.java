@@ -5,6 +5,11 @@
 package proyecto1_so_azael_sebastian.estructuras;
 import proyecto1_so_azael_sebastian.modelo.Proceso;
 
+/**
+ * Clase que representa un nodo individual para la implementacion 
+ * de las listas enlazadas personalizadas del sistema.
+ */
+
 public class Nodo {
     private Proceso contenido;
     private Nodo siguiente;

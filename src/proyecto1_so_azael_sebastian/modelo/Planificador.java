@@ -6,6 +6,11 @@ package proyecto1_so_azael_sebastian.modelo;
 
 import proyecto1_so_azael_sebastian.estructuras.ColaProcesos;
 
+/**
+ * Motor central del sistema operativo.
+ * administra las colas de estados, aplica los algoritmos de planificacion
+ * y gestiona las transiciones de los procesos en memoria.
+ */
 public class Planificador {
     private ColaProcesos readyQueue;
     private ColaProcesos blockedQueue;
@@ -25,8 +30,8 @@ public class Planificador {
         this.readySuspended = new ColaProcesos();
         this.blockedSuspended = new ColaProcesos();
         this.finishedProcesses = new ColaProcesos();
-        this.maxRAM = 50; // 50 de RAM por defecto
-        this.politicaActual = "Round Robin"; // Politica por defecto
+        this.maxRAM = 50; 
+        this.politicaActual = "Round Robin"; 
         this.quantum = 3;
         this.contadorQuantum = 0;
         this.enEjecucion = null;
@@ -45,6 +50,11 @@ public class Planificador {
         this.enEjecucion = null;
     }
 
+    /*
+     * Metodo principal de transicion de estados invocado por el reloj del sistema.
+     * ejerce el control sobre la CPU evaluando si el proceso actual termino, fallo por deadline,
+     * o si solicita una operacion de Entrada/Salida.
+     */
     public void ejecutarPaso() {
         gestionarBloqueados();
         gestionarSwap();
@@ -94,8 +104,11 @@ public class Planificador {
         }
     }
 
+    /*
+     * Logica de envejecimiento. Simula el paso del tiempo reduciendo el deadline
+     * de todos los procesos que se encuentran esperando en RAM o en memoria secundaria (Swap).
+     */
     private void envejecerColasDeEspera() {
-        // Reducimos el tiempo de vida de los que estan en la cola de Listos
         proyecto1_so_azael_sebastian.estructuras.Nodo actual = readyQueue.getInicio();
         while (actual != null) {
             actual.getContenido().reducirDeadline();
@@ -108,6 +121,11 @@ public class Planificador {
         }
     }
 
+    /*
+     * Logica central de las politicas de planificacion preemptivas.
+     * evalua constantemente si el proceso en ejecucion debe ser desalojado de la CPU
+     * basado en el quantum (Round Robin) o si ha llegado un proceso mas apto (SRT, Prioridad, EDF).
+     */
     private void verificarPreempcion() {
         if (politicaActual.equals("Round Robin") && contadorQuantum >= quantum) {
             enEjecucion.setEstado("Listo");
@@ -149,17 +167,19 @@ public class Planificador {
         }
     }
 
+    /*
+     * Transicion de estados por gestion de memoria (Swap-Out).
+     * si el sistema supera la capacidad maxima de la RAM, mueve procesos hacia las colas de suspendidos,
+     * priorizando desalojar aquellos procesos que se encuentren bloqueados.
+     */
     private void gestionarSwap() {
         while (readyQueue.getTamano() + blockedQueue.getTamano() > maxRAM) {
-            
             if (!blockedQueue.esVacia()) {
                 Proceso p = blockedQueue.desencolar();
                 p.setEstado("Bloqueado-Suspendido");
                 blockedSuspended.encolar(p);
                 registrarEvento("💾 [SWAP-OUT] Proceso " + p.getNombre() + " movido a Bloqueados-Suspendidos.");
-            } 
-
-            else if (!readyQueue.esVacia()) {
+            } else if (!readyQueue.esVacia()) {
                 Proceso p = readyQueue.desencolar();
                 p.setEstado("Listo-Suspendido");
                 readySuspended.encolar(p);
@@ -196,10 +216,14 @@ public class Planificador {
         }
     }
 
+    /*
+     * Gestiona la llegada asincrona de interrupciones de hardware.
+     * desaloja forzosamente al proceso en ejecucion y posiciona la Rutina de Servicio (ISR)
+     * en la cola con la mas alta prioridad posible.
+     */
     public synchronized void interrupcionEmergencia(Proceso emergencia) {
-        registrarEvento("⚠️ [INTERRUPCIÓN HARDWARE] ¡Impacto detectado! Suspendiendo CPU...");
+        registrarEvento("⚠️ [INTERRUPCION HARDWARE] Impacto detectado. Suspendiendo CPU...");
         
-        // Si la CPU estaba haciendo algo, lo sacamos
         if (enEjecucion != null) {
             registrarEvento("⚠️ Proceso " + enEjecucion.getNombre() + " interrumpido y devuelto a la cola.");
             enEjecucion.setEstado("Listo");
@@ -207,10 +231,9 @@ public class Planificador {
             enEjecucion = null;
         }
         
-        // Metemos el meteorito directo a la tabla de listos
         emergencia.setEstado("Listo");
         this.readyQueue.encolarPrioridad(emergencia); 
-        registrarEvento("🚨 Rutina de Emergencia encolada con prioridad máxima.");
+        registrarEvento("🚨 Rutina de Emergencia encolada con prioridad maxima.");
     }
 
     public void cambiarPolitica(String nuevaPolitica) {
@@ -222,33 +245,28 @@ public class Planificador {
         }
     }
     
-    public ColaProcesos getReadyQueue() {
-     return this.readyQueue;
- }
+    public ColaProcesos getReadyQueue() { return this.readyQueue; }
+    public ColaProcesos getBlockedQueue() { return this.blockedQueue; }
+    public Proceso getEnEjecucion() { return this.enEjecucion; }
+    
+    public void registrarEvento(String mensaje) {
+        this.bitacoraEventos += mensaje + "\n"; 
+    }
 
- public ColaProcesos getBlockedQueue() {
-     return this.blockedQueue;
- }
+    public String extraerEventos() {
+        String eventos = this.bitacoraEventos;
+        this.bitacoraEventos = ""; 
+        return eventos;
+    }
  
- public Proceso getEnEjecucion() {
-     return this.enEjecucion;
- }
- 
- public void registrarEvento(String mensaje) {
-     this.bitacoraEventos += mensaje + "\n"; 
- }
-
- public String extraerEventos() {
-     String eventos = this.bitacoraEventos;
-     this.bitacoraEventos = ""; 
-     return eventos;
- }
- 
- public ColaProcesos getFinishedProcesses() {
-     return this.finishedProcesses;
- }
- private void recuperarDeSwap() {
-        // Mientras haya espacio en RAM y haya procesos atrapados en el disco...
+    public ColaProcesos getFinishedProcesses() { return this.finishedProcesses; }
+    
+    /*
+     * Transicion de estados (Swap-In).
+     * devuelve los procesos suspendidos en memoria secundaria a la memoria principal
+     * cuando se detecta que hay espacio disponible en la RAM.
+     */
+    private void recuperarDeSwap() {
         while ((readyQueue.getTamano() + blockedQueue.getTamano()) < maxRAM && !readySuspended.esVacia()) {
             Proceso p = readySuspended.desencolar();
             p.setEstado("Listo");
@@ -257,7 +275,5 @@ public class Planificador {
         }
     }
 
-    public ColaProcesos getReadySuspended() {
-        return this.readySuspended;
-    }
+    public ColaProcesos getReadySuspended() { return this.readySuspended; }
 }
