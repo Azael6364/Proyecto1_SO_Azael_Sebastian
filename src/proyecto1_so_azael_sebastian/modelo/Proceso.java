@@ -62,15 +62,43 @@ public class Proceso {
         if (this.deadlineRestante > 0) this.deadlineRestante--;
     }
 
+    // --- GETTERS ---
     public int getId() { return id; }
     public String getNombre() { return nombre; }
     public String getEstado() { return estado; }
-    public void setEstado(String estado) { this.estado = estado; }
     public int getPrioridad() { return prioridad; }
     public int getDeadlineRestante() { return deadlineRestante; }
     public int getInstruccionesRestantes() { return instruccionesTotales - instruccionesEjecutadas; }
     public int getPC() { return pc; }
     public int getMAR() { return mar; }
     public boolean esTerminado() { return instruccionesEjecutadas >= instruccionesTotales; }
-   public int getDeadline() { return deadline; }
+    public int getDeadline() { return deadline; }
+
+    // --- SETTERS (Necesarios para la interrupción de emergencia) ---
+    public void setEstado(String estado) { this.estado = estado; }
+    
+    public void setNombre(String nombre) { 
+        this.nombre = nombre; 
+    }
+    
+    public void setPrioridad(int prioridad) { 
+        this.prioridad = prioridad; 
+    }
+    
+    public void setDeadline(int deadline) { 
+        this.deadline = deadline; 
+        this.deadlineRestante = deadline; // Sincronizamos ambos tiempos
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+

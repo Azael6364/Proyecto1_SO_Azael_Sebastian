@@ -48,7 +48,7 @@ public class Planificador {
     public void ejecutarPaso() {
         gestionarBloqueados();
         gestionarSwap();
-        
+        recuperarDeSwap();
         if (enEjecucion != null) {
             enEjecucion.ejecutarCiclo();
             enEjecucion.reducirDeadline();
@@ -164,12 +164,21 @@ public class Planificador {
         }
     }
 
-    public synchronized void interrupcionEmergencia() {
+    public synchronized void interrupcionEmergencia(Proceso emergencia) {
+        registrarEvento("⚠️ [INTERRUPCIÓN HARDWARE] ¡Impacto detectado! Suspendiendo CPU...");
+        
+        // Si la CPU estaba haciendo algo, lo sacamos
         if (enEjecucion != null) {
+            registrarEvento("⚠️ Proceso " + enEjecucion.getNombre() + " interrumpido y devuelto a la cola.");
             enEjecucion.setEstado("Listo");
             añadirAReady(enEjecucion);
             enEjecucion = null;
         }
+        
+        // Metemos el meteorito directo a la tabla de listos
+        emergencia.setEstado("Listo");
+        this.readyQueue.encolarPrioridad(emergencia); 
+        registrarEvento("🚨 Rutina de Emergencia encolada con prioridad máxima.");
     }
 
     public void cambiarPolitica(String nuevaPolitica) {
@@ -206,5 +215,17 @@ public class Planificador {
  public ColaProcesos getFinishedProcesses() {
      return this.finishedProcesses;
  }
- 
+ private void recuperarDeSwap() {
+        // Mientras haya espacio en RAM y haya procesos atrapados en el disco...
+        while ((readyQueue.getTamano() + blockedQueue.getTamano()) < maxRAM && !readySuspended.esVacia()) {
+            Proceso p = readySuspended.desencolar();
+            p.setEstado("Listo");
+            añadirAReady(p);
+            registrarEvento("💾 [SWAP-IN] Proceso " + p.getNombre() + " rescatado del Disco y devuelto a la RAM.");
+        }
+    }
+
+    public ColaProcesos getReadySuspended() {
+        return this.readySuspended;
+    }
 }
