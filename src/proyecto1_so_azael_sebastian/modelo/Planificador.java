@@ -49,27 +49,29 @@ public class Planificador {
         gestionarBloqueados();
         gestionarSwap();
         recuperarDeSwap();
+        envejecerColasDeEspera();
+        
         if (enEjecucion != null) {
             enEjecucion.ejecutarCiclo();
             enEjecucion.reducirDeadline();
             contadorQuantum++;
             
-            if (enEjecucion.getDeadline() <= 0 && !enEjecucion.esTerminado()) {
+            if (enEjecucion.getDeadlineRestante() <= 0 && !enEjecucion.esTerminado()) {
                 enEjecucion.setEstado("Fallido");
-                registrarEvento("[FALLO DE MISIÓN] " + enEjecucion.getNombre() + " no cumplió su Deadline.");
+                registrarEvento("💥 [FALLO DE MISIÓN] " + enEjecucion.getNombre() + " no cumplió su Deadline.");
                 finishedProcesses.encolar(enEjecucion);
                 enEjecucion = null;
                 contadorQuantum = 0;
             
             } else if (enEjecucion.esTerminado()) {
                 enEjecucion.setEstado("Terminado");
-                registrarEvento("[EXITO] El " + enEjecucion.getNombre() + " finalizo sus instrucciones.");
+                registrarEvento("✅ [EXITO] El " + enEjecucion.getNombre() + " finalizó sus instrucciones.");
                 finishedProcesses.encolar(enEjecucion);
                 enEjecucion = null;
                 contadorQuantum = 0;
             } else if (enEjecucion.debeBloquearse()) {
                 enEjecucion.iniciarBloqueo();
-                registrarEvento("[ALERTA] El " + enEjecucion.getNombre() + " solicito E/S (Va a Bloqueados).");
+                registrarEvento("⚠️ [ALERTA] El " + enEjecucion.getNombre() + " solicitó E/S (Va a Bloqueados).");
                 blockedQueue.encolar(enEjecucion);
                 enEjecucion = null;
                 contadorQuantum = 0;
@@ -82,6 +84,27 @@ public class Planificador {
             enEjecucion = readyQueue.desencolar();
             enEjecucion.setEstado("Ejecucion");
             contadorQuantum = 0;
+            
+            if (enEjecucion.getDeadlineRestante() <= 0) {
+                enEjecucion.setEstado("Fallido");
+                registrarEvento("💥 [FALLO POR ESPERA] " + enEjecucion.getNombre() + " expiró en la cola de Listos.");
+                finishedProcesses.encolar(enEjecucion);
+                enEjecucion = null;
+            }
+        }
+    }
+
+    private void envejecerColasDeEspera() {
+        // Reducimos el tiempo de vida de los que estan en la cola de Listos
+        proyecto1_so_azael_sebastian.estructuras.Nodo actual = readyQueue.getInicio();
+        while (actual != null) {
+            actual.getContenido().reducirDeadline();
+            actual = actual.getSiguiente();
+        }
+        actual = readySuspended.getInicio();
+        while (actual != null) {
+            actual.getContenido().reducirDeadline();
+            actual = actual.getSiguiente();
         }
     }
 
@@ -128,10 +151,19 @@ public class Planificador {
 
     private void gestionarSwap() {
         while (readyQueue.getTamano() + blockedQueue.getTamano() > maxRAM) {
-            Proceso p = readyQueue.desencolar();
-            if (p != null) {
+            
+            if (!blockedQueue.esVacia()) {
+                Proceso p = blockedQueue.desencolar();
+                p.setEstado("Bloqueado-Suspendido");
+                blockedSuspended.encolar(p);
+                registrarEvento("💾 [SWAP-OUT] Proceso " + p.getNombre() + " movido a Bloqueados-Suspendidos.");
+            } 
+
+            else if (!readyQueue.esVacia()) {
+                Proceso p = readyQueue.desencolar();
                 p.setEstado("Listo-Suspendido");
                 readySuspended.encolar(p);
+                registrarEvento("💾 [SWAP-OUT] Proceso " + p.getNombre() + " movido a Listos-Suspendidos.");
             }
         }
     }

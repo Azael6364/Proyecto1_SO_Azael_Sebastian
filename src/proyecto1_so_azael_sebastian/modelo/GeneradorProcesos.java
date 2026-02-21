@@ -22,7 +22,7 @@ public class GeneradorProcesos {
         String nombre = "Proc_" + id;
         int instrucciones = (int) (Math.random() * 20) + 5; // Entre 5 y 25 instrucciones [cite: 42]
         int prioridad = (int) (Math.random() * 5) + 1;      // Prioridad 1-5 [cite: 42]
-        int deadline = (int) (Math.random() * 50) + 10;    // Deadline 10-60 ciclos [cite: 42]
+        int deadline = (int) (Math.random() * 300) + 100;   
 
         return new Proceso(id, nombre, instrucciones, prioridad, deadline);
     }

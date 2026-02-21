@@ -51,4 +51,7 @@ public class Reloj extends Thread {
             }
         }
     }
+    public void setTiempoCiclo(int nuevoTiempo) {
+        this.tiempoCiclo = nuevoTiempo; 
+    }
 }
